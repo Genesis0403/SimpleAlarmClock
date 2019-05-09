@@ -8,6 +8,15 @@ import com.epam.simplealarmclock.model.Alarm
 import com.epam.simplealarmclock.model.AlarmTime
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ * Main Activity with alarm time picker.
+ *
+ * @see [Alarm]
+ * @see [AlarmTime]
+ *
+ * @author Vlad Korotkevich
+ */
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

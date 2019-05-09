@@ -5,6 +5,12 @@ import android.content.Intent
 import androidx.core.app.JobIntentService
 import com.epam.simplealarmclock.model.Alarm
 
+/**
+ * Service which starts work after device boot.
+ *
+ * @author Vlad Korotkevich
+ */
+
 class RebootService : JobIntentService() {
 
     override fun onHandleWork(intent: Intent) {

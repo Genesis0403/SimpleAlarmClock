@@ -1,10 +1,20 @@
 package com.epam.simplealarmclock
 
+import com.epam.simplealarmclock.receivers.AlarmSetReceiver
+
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.epam.simplealarmclock.model.Alarm
 import kotlinx.android.synthetic.main.activity_alarm.*
+
+/**
+ * Activity which starts when alarm invoked.
+ *
+ * @see [AlarmSetReceiver]
+ *
+ * @author Vlad Koroktevich
+ */
 
 class AlarmActivity : AppCompatActivity() {
 

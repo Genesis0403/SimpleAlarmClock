@@ -5,6 +5,12 @@ import android.content.Context
 import android.content.Intent
 import com.epam.simplealarmclock.services.RebootService
 
+/**
+ * Broadcast Receiver which invoked after device boot.
+ *
+ * @author Vlad Korotkevich
+ */
+
 class RebootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {

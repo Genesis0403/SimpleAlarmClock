@@ -9,6 +9,14 @@ import com.epam.simplealarmclock.receivers.AlarmSetReceiver
 import java.util.*
 import kotlin.reflect.KClass
 
+/**
+ *  Singleton Alarm class.
+ *  All methods are responsible to start/cancel alarm clock
+ *  or get PendingIntents.
+ *
+ * @author Vlad Korotkevich
+ */
+
 object Alarm {
 
     const val PLAY_ALARM_REQUEST = 1

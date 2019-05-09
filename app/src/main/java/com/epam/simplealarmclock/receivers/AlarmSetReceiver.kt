@@ -15,21 +15,23 @@ import com.epam.simplealarmclock.R
 import com.epam.simplealarmclock.model.Alarm
 import java.lang.IllegalArgumentException
 
+/**
+ * Broadcast Receiver which responsible for notifying user
+ * about 5 minutes before alarm start and
+ * starts [AlarmActivity] if alarm wasn't cancel.
+ *
+ * @author Vlad Korotkevich
+ */
+
 class AlarmSetReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         intent?.let {
-            val time = AlarmTime(
-                it.getIntExtra(Alarm.EXTRA_HOURS, -1),
-                it.getIntExtra(Alarm.EXTRA_MINUTES, -1)
-            )
-            Log.d(TAG, it.action)
             when (it.action) {
                 Alarm.PLAY_ALARM_ACTION -> {
                     context?.startActivity(Intent(context, AlarmActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     })
-                    //Alarm.makeToast(context, "Wake up my darling! Current time: ${time.hour}:${time.minute}")
                 }
                 Alarm.FIVE_MINUTES_ACTION -> {
                     createNotification(context,
