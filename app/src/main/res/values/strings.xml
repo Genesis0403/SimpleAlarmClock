@@ -2,4 +2,8 @@
     <string name="app_name">SimpleAlarmClock</string>
     <string name="set_alarm">Set alarm</string>
     <string name="cancel_alarm">Cancel alarm</string>
+    <string name="notification_title">Alarm Clock</string>
+    <string name="five_minutes_left">Five minutes or less left</string>
+    <string name="alarm_set">Alarm clock has been set!</string>
+    <string name="alarm_cancaled">Alarm clock has been canceled!</string>
 </resources>
