@@ -6,4 +6,6 @@
     <string name="five_minutes_left">Five minutes or less left</string>
     <string name="alarm_set">Alarm clock has been set!</string>
     <string name="alarm_cancaled">Alarm clock has been canceled!</string>
+    <string name="choose_ringtone">Choose ringtone</string>
+    <string name="select_ringtone">Select ringtone</string>
 </resources>

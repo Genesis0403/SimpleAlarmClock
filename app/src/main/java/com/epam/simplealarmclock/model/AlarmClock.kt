@@ -10,7 +10,8 @@ import kotlinx.android.parcel.Parcelize
  */
 
 @Parcelize
-data class AlarmTime(
+data class AlarmClock(
     val hour: Int,
-    val minute: Int
+    val minute: Int,
+    val ringtone: String?
 ) : Parcelable

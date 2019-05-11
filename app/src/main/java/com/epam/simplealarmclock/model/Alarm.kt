@@ -4,8 +4,12 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.net.Uri
+import android.util.Log
 import androidx.core.content.edit
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.epam.simplealarmclock.R
 import com.epam.simplealarmclock.receivers.AlarmSetReceiver
 import java.util.*
 import kotlin.reflect.KClass
@@ -20,28 +24,31 @@ import kotlin.reflect.KClass
 
 object Alarm {
 
-    const val PLAY_ALARM_REQUEST = 1
-    const val FIVE_MINUTES_REQUEST = 2
-
-    const val EXTRA_HOURS = "EXTRA_HOURS"
-    const val EXTRA_MINUTES = "EXTRA_MINUTES"
-
     const val PLAY_ALARM_ACTION = "PLAY_ALARM_ACTION"
     const val FIVE_MINUTES_ACTION = "FIVE_MINUTES_ACTION"
 
     const val IS_ALARM_RUNNING = "IS_ALARM_RUNNING"
     const val REBOOT_SHARED_PREFERENCES = "REBOOT_SHARED_PREFERENCES"
 
+    private const val PLAY_ALARM_REQUEST = 1
+    private const val FIVE_MINUTES_REQUEST = 2
+
+    private const val EXTRA_HOURS = "EXTRA_HOURS"
+    private const val EXTRA_MINUTES = "EXTRA_MINUTES"
+    private const val ALARM_SOUND = "ALARM_SOUND"
+
     private const val FIVE_MINUTES = 5
     private const val ONE_HOUR_IN_MINUTES = 60
 
-    fun setAlarmClock(context: Context, time: AlarmTime) {
+    private var mediaPlayer: MediaPlayer? = null
 
-        context.getSharedPreferences(REBOOT_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit {
+    fun setAlarmClock(context: Context?, time: AlarmClock) {
+
+        context?.getSharedPreferences(REBOOT_SHARED_PREFERENCES, Context.MODE_PRIVATE)?.edit {
             putInt(EXTRA_HOURS, time.hour)
             putInt(EXTRA_MINUTES, time.minute)
+            putString(ALARM_SOUND, time.ringtone)
             putBoolean(IS_ALARM_RUNNING, true)
-            commit()
         }
 
         setAlarm(
@@ -72,7 +79,7 @@ object Alarm {
     }
 
     private fun didFiveMinutesPassed(
-        context: Context,
+        context: Context?,
         timeFiveMinutesBack: Pair<Int, Int>
     ): Boolean {
         val fiveMinutesBackMillis =
@@ -85,22 +92,22 @@ object Alarm {
             }
             //TODO read more about LocalBroadcastManager
             //LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
-            context.sendBroadcast(intent)
+            context?.sendBroadcast(intent)
             return true
         }
         return false
     }
 
-    fun setAlarm(
-        context: Context,
+    private fun setAlarm(
+        context: Context?,
         receiver: KClass<*>,
         requestCode: Int,
         action: String,
-        time: AlarmTime,
+        time: AlarmClock,
         timeInMillis: Long
     ): PendingIntent {
 
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val pIntent = getPendingIntent(context, receiver, requestCode) {
             it.action = action
@@ -117,8 +124,8 @@ object Alarm {
         return pIntent
     }
 
-    fun getPendingIntent(
-        context: Context,
+    private fun getPendingIntent(
+        context: Context?,
         receiver: KClass<*>,
         requestCode: Int,
         init: (Intent) -> Intent
@@ -132,7 +139,7 @@ object Alarm {
         )
     }
 
-    fun setAlarmManager(
+    private fun setAlarmManager(
         alarmManager: AlarmManager?,
         playTime: Long,
         pendingIntent: PendingIntent?
@@ -145,7 +152,7 @@ object Alarm {
         )
     }
 
-    fun getMillis(hour: Int, minute: Int, second: Int, ms: Int): Long =
+    private fun getMillis(hour: Int, minute: Int, second: Int, ms: Int): Long =
         Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, hour)
@@ -154,16 +161,17 @@ object Alarm {
             set(Calendar.MILLISECOND, ms)
         }.timeInMillis
 
-    fun getTime(context: Context): AlarmTime =
+    fun getTime(context: Context): AlarmClock =
         with(context.getSharedPreferences(REBOOT_SHARED_PREFERENCES, Context.MODE_PRIVATE)) {
-            AlarmTime(
+            AlarmClock(
                 getInt(EXTRA_HOURS, -1),
-                getInt(EXTRA_MINUTES, -1)
+                getInt(EXTRA_MINUTES, -1),
+                getString(ALARM_SOUND, null)
             )
         }
 
-    fun cancelAlarmClock(context: Context) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    fun cancelAlarmClock(context: Context?) {
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val time = getTime(context)
 
@@ -193,7 +201,35 @@ object Alarm {
         context.getSharedPreferences(REBOOT_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit {
             clear()
             putBoolean(IS_ALARM_RUNNING, false)
-            commit()
         }
+    }
+
+    const val TAG = "ALARM"
+    fun createMediaPlayer(context: Context?) {
+        val sound = context?.getSharedPreferences(REBOOT_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+            ?.getString(ALARM_SOUND, null)
+        Log.d(TAG, sound.toString())
+        mediaPlayer = if (sound == null) {
+            MediaPlayer.create(context, R.raw.erjan)
+        } else {
+            MediaPlayer().apply {
+                setAudioStreamType(AudioManager.STREAM_MUSIC)
+                setDataSource(context, Uri.parse(sound))
+            }
+        }
+    }
+
+    fun startPlayMusic(context: Context?) {
+        val ringtone = context?.getSharedPreferences(REBOOT_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+            ?.getString(ALARM_SOUND, null)
+            mediaPlayer?.apply {
+                if (ringtone != null) prepareAsync()
+                start()
+            }
+        }
+
+    fun cancelMusic() {
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }
