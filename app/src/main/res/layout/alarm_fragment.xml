@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/alarmFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:menu="@menu/alarm_fragment_menu">
+
+    <TimePicker
+            android:id="@+id/alarmPicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:headerBackground="@color/colorPrimary"
+            android:numbersSelectorColor="@color/colorPrimary"
+    />
+
+    <LinearLayout
+            android:id="@+id/buttonsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+    >
+        <Button
+                android:id="@+id/setAlarmButton"
+                android:text="@string/set_alarm"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="64dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:backgroundTint="@color/colorPrimary"
+                android:layout_gravity="center_vertical"
+        />
+
+        <Button
+                android:id="@+id/cancelButton"
+                android:text="@string/cancel_alarm"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_marginEnd="32dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:layout_gravity="center_vertical"
+        />
+    </LinearLayout>
+
+</LinearLayout>
