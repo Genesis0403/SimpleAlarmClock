@@ -1,9 +1,21 @@
 package com.epam.simplealarmclock
 
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.epam.simplealarmclock.model.Alarm
+import com.epam.simplealarmclock.model.AlarmTime
 import kotlinx.android.synthetic.main.activity_main.*
+
+/**
+ * Main Activity with alarm time picker.
+ *
+ * @see [Alarm]
+ * @see [AlarmTime]
+ *
+ * @author Vlad Korotkevich
+ */
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,16 +23,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        alarmClock.setOnTimeChangedListener { _, hourOfDay, minute ->
-            Toast.makeText(this, "Time has changed to $hourOfDay:$minute.", Toast.LENGTH_LONG).show()
-        }
+        alarmClock.setIs24HourView(true)
 
         setAlarmButton.setOnClickListener {
-            Toast.makeText(this, "Clicked set alarm", Toast.LENGTH_SHORT).show()
+            val time = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                AlarmTime(alarmClock.hour, alarmClock.minute)
+            } else {
+                AlarmTime(alarmClock.currentHour, alarmClock.currentMinute)
+            }
+            Alarm.setAlarmClock(this, time)
+            Toast.makeText(this, getString(R.string.alarm_set), Toast.LENGTH_SHORT).show()
         }
 
         cancelButton.setOnClickListener {
-            Toast.makeText(this, "Clicked cancel alarm", Toast.LENGTH_SHORT).show()
+            Alarm.cancelAlarmClock(this)
+            Toast.makeText(this, getString(R.string.alarm_cancaled), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    companion object {
+        private const val TAG = "MAIN ACTIVITY"
     }
 }
