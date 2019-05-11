@@ -6,11 +6,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.epam.simplealarmclock.AlarmActivity
-import com.epam.simplealarmclock.model.AlarmTime
 import com.epam.simplealarmclock.R
 import com.epam.simplealarmclock.model.Alarm
 import java.lang.IllegalArgumentException

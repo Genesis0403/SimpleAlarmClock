@@ -25,9 +25,18 @@ class AlarmActivity : AppCompatActivity() {
 
         alarmTime.text = constructTime()
 
+        Alarm.createMediaPlayer(this)
+        Alarm.startPlayMusic(this)
+
         cancelButton.setOnClickListener {
             cancelButtonListener()
+            Alarm.cancelMusic()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Alarm.cancelMusic()
     }
 
     private fun constructTime(): String {
