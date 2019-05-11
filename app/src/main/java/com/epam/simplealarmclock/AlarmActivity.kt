@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.epam.simplealarmclock.model.Alarm
 import kotlinx.android.synthetic.main.activity_alarm.*
+import java.lang.StringBuilder
 
 /**
  * Activity which starts when alarm invoked.
@@ -31,16 +32,17 @@ class AlarmActivity : AppCompatActivity() {
 
     private fun constructTime(): String {
         val alarm = Alarm.getTime(this)
-        var time = ""
-        if (alarm.hour < 10) {
-            time += "0"
-        }
-        time += alarm.hour.toString() + ":"
-        if (alarm.minute < 10) {
-            time += 0
-        }
-        time += alarm.minute
-        return time
+        return StringBuilder("").apply {
+            if (alarm.hour < 10) {
+                append("0")
+            }
+            append(alarm.hour.toString())
+            append(":")
+            if (alarm.minute < 10) {
+                append("0")
+            }
+            append(alarm.minute)
+        }.toString()
     }
 
     private fun cancelButtonListener() {

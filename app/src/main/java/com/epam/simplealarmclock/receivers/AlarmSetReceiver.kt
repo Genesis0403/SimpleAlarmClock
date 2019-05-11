@@ -34,17 +34,21 @@ class AlarmSetReceiver : BroadcastReceiver() {
                     })
                 }
                 Alarm.FIVE_MINUTES_ACTION -> {
-                    createNotification(context,
+                    createNotification(
+                        context,
                         context?.getString(R.string.notification_title),
-                        context?.getString(R.string.five_minutes_left))
-                } else -> IllegalArgumentException("${it.action} is not registered!")
+                        context?.getString(R.string.five_minutes_left)
+                    )
+                }
+                else -> IllegalArgumentException("${it.action} is not registered!")
             }
         }
     }
 
     private fun createNotification(context: Context?, title: String?, content: String?) {
         context?.let {
-            createNotificationChannel(it,
+            createNotificationChannel(
+                it,
                 CHANNEL_NAME,
                 CHANNEL_DESCRIPTION
             )
@@ -64,7 +68,10 @@ class AlarmSetReceiver : BroadcastReceiver() {
             setSmallIcon(R.drawable.ic_access_alarm_black_24dp)
             setContentTitle(title)
             setContentText(content)
+            setTimeoutAfter(NOTIFICATION_DURATION)
+            setAutoCancel(NOTIFICATION_AUTO_CANCEL)
             priority = NotificationCompat.PRIORITY_DEFAULT
+            setCategory(NotificationCompat.CATEGORY_ALARM)
         }
 
     private fun createNotificationChannel(
@@ -72,7 +79,7 @@ class AlarmSetReceiver : BroadcastReceiver() {
         name: String,
         descriptionText: String
     ) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
             description = descriptionText
@@ -87,5 +94,7 @@ class AlarmSetReceiver : BroadcastReceiver() {
         private const val CHANNEL_NAME = "Alarm Clock"
         private const val CHANNEL_DESCRIPTION = "Alarm Clock"
         private const val FIVE_MINUTES_NOTIFICATION = 1
+        private const val NOTIFICATION_AUTO_CANCEL = true
+        private const val NOTIFICATION_DURATION: Long = 300000
     }
 }

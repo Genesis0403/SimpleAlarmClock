@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.edit
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.epam.simplealarmclock.receivers.AlarmSetReceiver
 import java.util.*
 import kotlin.reflect.KClass
@@ -82,6 +83,8 @@ object Alarm {
                 putExtra(EXTRA_MINUTES, timeFiveMinutesBack.second)
                 action = FIVE_MINUTES_ACTION
             }
+            //TODO read more about LocalBroadcastManager
+            //LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
             context.sendBroadcast(intent)
             return true
         }
@@ -148,6 +151,7 @@ object Alarm {
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minute)
             set(Calendar.SECOND, second)
+            set(Calendar.MILLISECOND, ms)
         }.timeInMillis
 
     fun getTime(context: Context): AlarmTime =
